@@ -6,10 +6,10 @@ class MyLinkedList {
     class ListNode {
         int val;
         ListNode next;
-        ListNode () {}
-        ListNode (int val, ListNode next) {
+        ListNode() {};
+        ListNode(int val) {
             this.val = val;
-            this.next = next;
+            this.next = null;
         }
     }
 
@@ -19,94 +19,82 @@ class MyLinkedList {
     }
     
     public int get(int index) {
-        ListNode curr = head;
-        if (index >= n) {
+        if (index >= n || head == null) {
             return -1;
         }
+        ListNode curr = head;
         int i = 0;
         while(i != index) {
-            i++;
             curr = curr.next;
+            i++;
         }
         return curr.val;
     }
     
     public void addAtHead(int val) {
-        ListNode temp = new ListNode(val, null);
+        ListNode temp = new ListNode(val);
         temp.next = head;
         head = temp;
         n++;
     }
     
     public void addAtTail(int val) {
-        ListNode curr = head;
-        ListNode temp = new ListNode(val, null);
-        if(curr == null) {
-            head = temp;
+        if (head == null) {
+            addAtHead(val);
+        } else {
+            ListNode curr = head;
+            ListNode temp = new ListNode(val);
+            while (curr.next != null) {
+                curr = curr.next;
+            }
+            curr.next = temp;
             n++;
-            return;
         }
-        while(curr.next != null) {
-            curr = curr.next;
-        }
-        curr.next = temp;
-        n++;
     }
     
     public void addAtIndex(int index, int val) {
         if (index > n) {
             return;
         }
-        if(index == n) {
-            addAtTail(val);
-            return;
-        }
-        
-        ListNode newNode = new ListNode(val, null);
-        if(index == 0) {
+        if (index == 0) {
             addAtHead(val);
-            return;
+        } else if (index == n) {
+            addAtTail(val);
+        } else {
+            ListNode temp = new ListNode(val);
+            ListNode curr = head;
+            int i = 0;
+            while(i != index - 1) {
+                i++;
+                curr = curr.next;
+            }
+            ListNode next = curr.next;
+            curr.next = temp;
+            temp.next = next;
+            n++;
         }
-        
-        int i = 0;
-        ListNode current = head;
-        
-        while(i != index - 1) {
-            current = current.next;
-            i++;
-        }
-        
-        ListNode oldNext = current.next;
-        
-        current.next = newNode;
-        newNode.next = oldNext;
-        n++;
     }
     
     public void deleteAtIndex(int index) {
-        if(index >= n) return;
-        
-        if(index == 0) {
+        if (head == null || index >= n) {
+            return;
+        } 
+        if (index == 0) {
             head = head.next;
             n--;
             return;
         }
-        
+        ListNode curr = head;
+        ListNode prev = null;
         int i = 0;
-        ListNode current  = head;
-        
-        while(i != index - 1) {
-            current = current.next;     
+        while(i != index) {
             i++;
+            ListNode temp = curr.next;
+            prev = curr;
+            curr = temp;
         }
-        
-        if(current.next.next == null) {
-            current.next = null;
-            n--;
-            return;
-        } 
-        current.next = current.next.next;
-        n--;  
+        prev.next = curr.next;
+        n--;
     }
 }
 
